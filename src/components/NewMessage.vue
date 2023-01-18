@@ -13,12 +13,16 @@ export default {
     props: ['name'],
     data(){
         return{
-            newMessage: null
+            newMessage: null,
+            submited: false
         }
     },
     methods: {
         addMessage(){
-            console.log(this.newMessage, this.name, Date.now())
+            this.$http.post('https://vue-chat-2094a-default-rtdb.europe-west1.firebasedatabase.app/messages.json',
+            { content: this.newMessage, name: this.name, date: Date.now()}),
+            this.newMessage = null,
+            this.submited = true
         }
     }
 }
