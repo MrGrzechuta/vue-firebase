@@ -4,7 +4,11 @@
   import NewMessage from '../components/NewMessage.vue'
 
   import firebaseApp from '../firebase/init'
+  import { getDatabase, ref, child, get } from "firebase/database";
 
+  const dbRef = ref(getDatabase(firebaseApp));
+
+  
   export default {
     name: 'chat',
     props: ['name'],
@@ -17,14 +21,20 @@
         }
     },
     created(){
-        this.$http.get('https://vue-chat-2094a-default-rtdb.europe-west1.firebasedatabase.app/messages.json').then(function(data){
-            this.messages = data.body
-        }),
-        console.log(firebaseApp.database())
+        get(child(dbRef, 'messages')).then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            this.messages = snapshot.val()
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
     },
     filters: {
       'date-formatting': function(value){
-        return moment(value).format('MM/DD/YYYY hh:mm')
+        return moment(value).format('DD/MM/YYYY HH:mm:ss')
       }
     }
 }
