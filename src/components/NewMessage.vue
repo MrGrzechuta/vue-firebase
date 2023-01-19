@@ -8,22 +8,28 @@
 </template>
 
 <script>
+import { getDatabase, ref, set } from "firebase/database";
+import firebaseApp from '../firebase/init'
+
+const db = getDatabase(firebaseApp);
+
 export default {
     name: 'NewMessage',
     props: ['name'],
     data(){
         return{
-            newMessage: null,
-            submited: false
+            newMessage: null
         }
     },
     methods: {
-        addMessage(){
-            this.$http.post('https://vue-chat-2094a-default-rtdb.europe-west1.firebasedatabase.app/messages.json',
-            { content: this.newMessage, name: this.name, date: Date.now()}),
-            this.newMessage = null,
-            this.submited = true
-        }
+        addMessage() {
+            set(ref(db, 'messages/' + Date.now()), {
+                content: this.newMessage,
+                name: this.name,
+                date: Date.now()
+            });
+            this.newMessage = null
+            }
     }
 }
 </script>
