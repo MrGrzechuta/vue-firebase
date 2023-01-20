@@ -23,13 +23,15 @@ export default {
     },
     methods: {
         addMessage() {
-            set(ref(db, 'messages/' + Date.now()), {
-                content: this.newMessage,
-                name: this.name,
-                date: Date.now()
-            });
-            this.newMessage = null
+            if(this.newMessage != null){
+                set(ref(db, 'messages/' + Date.now()), {
+                    content: this.newMessage,
+                    name: this.name,
+                    date: Date.now()
+                });
+                this.newMessage = null
             }
+        }
     }
 }
 </script>

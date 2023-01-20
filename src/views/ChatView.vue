@@ -1,13 +1,12 @@
 <script>
-  //import Chat from '../components/Chat.vue'
   import moment from 'moment'
   import NewMessage from '../components/NewMessage.vue'
 
   import firebaseApp from '../firebase/init'
-  import { getDatabase, ref, child, get } from "firebase/database";
+  import { getDatabase, ref, onValue } from "firebase/database";
 
-  const dbRef = ref(getDatabase(firebaseApp));
-
+  const db = getDatabase(firebaseApp);
+  const starCountRef = ref(db, 'messages');
   
   export default {
     name: 'chat',
@@ -21,16 +20,9 @@
         }
     },
     created(){
-        get(child(dbRef, 'messages')).then((snapshot) => {
-          if (snapshot.exists()) {
-            console.log(snapshot.val());
-            this.messages = snapshot.val()
-          } else {
-            console.log("No data available");
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
+      onValue(starCountRef, (snapshot) => {
+        this.messages = snapshot.val();
+      });
     },
     filters: {
       'date-formatting': function(value){

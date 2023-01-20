@@ -3,9 +3,7 @@ import App from './App.vue'
 import router from './router'
 import VueResource from 'vue-resource'
 
-
 Vue.use(VueResource)
-
 
 import './assets/main.css'
 
